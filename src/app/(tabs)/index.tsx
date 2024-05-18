@@ -1,14 +1,7 @@
-import ProductListItem from "@/components/ProductListItem";
-import products from "@assets/data/products";
-import { Image, StyleSheet } from "react-native";
+import { Redirect } from 'expo-router';
 
-export default function MenuScreen() {
-  return (
-    <>
-      <ProductListItem product={products[3]} />
-      <ProductListItem product={products[1]} />
-    </>
-  );
-}
+const index = () => {
+  return <Redirect href={'/menu/'} />;
+};
 
-const styles = StyleSheet.create({});
+export default index;
