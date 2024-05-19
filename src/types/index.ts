@@ -8,6 +8,14 @@ type ProductListProps = {
   product: Product;
 };
 
+type CartItem = {
+  id: string;
+  product: Product;
+  product_id: number;
+  size: PizzaSize;
+  quantity: number;
+};
+
 const OrderStatusList: OrderStatus[] = [
   'New',
   'Cooking',
