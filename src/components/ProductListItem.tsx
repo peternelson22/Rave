@@ -1,13 +1,16 @@
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import Colors from '@/constants/Colors';
-import { Link } from 'expo-router';
+import { Link, useSegments } from 'expo-router';
 import { defaultImage } from 'utils';
 
 const ProductListItem = ({ product }: ProductListProps) => {
   const { name, image, price } = product;
+
+  const segments = useSegments();
+
   return (
-    <Link href={`/menu/${product.id}`} asChild>
+    <Link href={`/${segments[0]}/menu/${product.id}`} asChild>
       <Pressable style={styles.container}>
         <Image
           source={{ uri: image || defaultImage }}
