@@ -28,6 +28,7 @@ export default function TabLayout() {
         name='orders'
         options={{
           title: '',
+          headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name='list' color={color} />,
         }}
       />
