@@ -1,16 +1,34 @@
 import Button from '@/components/Button';
 import Colors from '@/constants/Colors';
-import { useState } from 'react';
-import { Image, StyleSheet, Text, TextInput, View } from 'react-native';
+import { PropsWithChildren, useState } from 'react';
+import {
+  Alert,
+  Image,
+  Keyboard,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import { defaultImage } from 'utils';
 import * as ImagePicker from 'expo-image-picker';
-import { Stack } from 'expo-router';
+import { Stack, useLocalSearchParams } from 'expo-router';
+
+const DismissKeyboard = ({ children }: PropsWithChildren) => (
+  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    {children}
+  </TouchableWithoutFeedback>
+);
 
 const CreateProductScreen = () => {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [errors, setErrors] = useState('');
   const [image, setImage] = useState<string | null>(null);
+
+  const { id } = useLocalSearchParams();
+  const isUpdating = !!id;
 
   const resetFields = () => {
     setName('');
@@ -33,6 +51,15 @@ const CreateProductScreen = () => {
     }
     return true;
   };
+
+  const onSubmit = () => {
+    if (isUpdating) {
+      update();
+    } else {
+      create();
+    }
+    Keyboard.dismiss();
+  };
   const create = () => {
     if (!validateInputs()) {
       return;
@@ -42,6 +69,23 @@ const CreateProductScreen = () => {
     resetFields();
   };
 
+  const update = () => {
+    if (!validateInputs()) {
+      return;
+    }
+    console.warn('Updating...');
+
+    resetFields();
+  };
+  const onDelete = () => {
+    console.warn('Deleted');
+  };
+  const confirmDelete = () => {
+    Alert.alert('Confirm', 'Are you sure you want to delete this product?', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Delete', style: 'destructive', onPress: onDelete },
+    ]);
+  };
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -56,30 +100,39 @@ const CreateProductScreen = () => {
     }
   };
   return (
-    <View style={styles.container}>
-      <Stack.Screen options={{ title: 'Create Product' }} />
-      <Image source={{ uri: image || defaultImage }} style={styles.image} />
-      <Text onPress={pickImage} style={styles.imageText}>
-        Select Image
-      </Text>
-      <Text style={styles.label}>Name</Text>
-      <TextInput
-        value={name}
-        onChangeText={setName}
-        style={styles.input}
-        placeholder='Name'
-      />
-      <Text style={styles.label}>Price ($)</Text>
-      <TextInput
-        value={price}
-        onChangeText={setPrice}
-        style={styles.input}
-        placeholder='9.99'
-        keyboardType='numeric'
-      />
-      <Text style={{ color: 'red' }}>{errors}</Text>
-      <Button onPress={create} text='Create' />
-    </View>
+    <DismissKeyboard>
+      <View style={styles.container}>
+        <Stack.Screen
+          options={{ title: isUpdating ? 'Update Product' : 'Create Product' }}
+        />
+        <Image source={{ uri: image || defaultImage }} style={styles.image} />
+        <Text onPress={pickImage} style={styles.textBtn}>
+          Select Image
+        </Text>
+        <Text style={styles.label}>Name</Text>
+        <TextInput
+          value={name}
+          onChangeText={setName}
+          style={styles.input}
+          placeholder='Name'
+        />
+        <Text style={styles.label}>Price ($)</Text>
+        <TextInput
+          value={price}
+          onChangeText={setPrice}
+          style={styles.input}
+          placeholder='9.99'
+          keyboardType='numeric'
+        />
+        <Text style={{ color: 'red' }}>{errors}</Text>
+        <Button onPress={onSubmit} text={isUpdating ? 'Update' : 'Create'} />
+        {isUpdating && (
+          <Text onPress={confirmDelete} style={styles.textBtn}>
+            Delete
+          </Text>
+        )}
+      </View>
+    </DismissKeyboard>
   );
 };
 
@@ -108,7 +161,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 100,
   },
-  imageText: {
+  textBtn: {
     alignSelf: 'center',
     fontWeight: 'bold',
     color: Colors.light.tint,
