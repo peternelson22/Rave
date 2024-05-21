@@ -1,49 +1,71 @@
 import Button from '@/components/Button';
-import { Redirect, useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { Keyboard, StyleSheet, Text, TextInput, View } from 'react-native';
+import { supabase } from '@/lib/supabase';
+import { useRouter } from 'expo-router';
+import { useState } from 'react';
+import {
+  Alert,
+  Keyboard,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 
 const AuthScreen = () => {
-  const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [isSignUp, setIsSignUp] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  const signUp = async () => {
+    setLoading(true);
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+    if (error) Alert.alert(error.message);
+    setLoading(false);
+  };
+
+  const signIn = async () => {
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) Alert.alert(error.message);
+    setLoading(false);
+  };
 
   const handleAuth = () => {
     Keyboard.dismiss();
     if (isSignUp) {
-      console.log('Sign Up:', { name, email, password });
-      router.push('/(user)/');
-      // Add your sign up logic here
+      signUp();
+      // router.push('/(user)/');
     } else {
-      console.log('Sign In:', { email, password });
-      // Add your sign in logic here
+      signIn();
     }
   };
 
   const toggleAuth = () => {
     setIsSignUp(!isSignUp);
-    setName('');
     setEmail('');
     setPassword('');
   };
+
+  const getButtonText = () => {
+    if (loading) {
+      return isSignUp ? 'Creating account...' : 'Please wait...';
+    }
+    return isSignUp ? 'Sign Up' : 'Sign In';
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{isSignUp ? 'Sign Up' : 'Sign In'}</Text>
-      {/* <Tabs.Screen options={{ title: isSignIn ? 'Sign In' : 'Sign Up' }} /> */}
 
       <Text style={styles.label}>Email</Text>
-      {isSignUp && (
-        <TextInput
-          value={name}
-          onChangeText={setName}
-          style={styles.input}
-          placeholder='Name'
-          autoCapitalize='none'
-          textContentType='name'
-        />
-      )}
       <TextInput
         value={email}
         onChangeText={setEmail}
@@ -70,7 +92,7 @@ const AuthScreen = () => {
           {isSignUp ? 'Sign in' : 'Sign up'}
         </Text>
       </View>
-      <Button onPress={handleAuth} text={isSignUp ? 'Sign Up' : 'Sign In'} />
+      <Button onPress={handleAuth} disabled={loading} text={getButtonText()} />
     </View>
   );
 };

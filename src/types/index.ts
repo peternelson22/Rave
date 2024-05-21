@@ -16,12 +16,6 @@ type CartItem = {
   quantity: number;
 };
 
-const OrderStatusList: OrderStatus[] = [
-  'New',
-  'Cooking',
-  'Delivering',
-  'Delivered',
-];
 type PizzaSize = 'S' | 'M' | 'L' | 'XL';
 
 type OrderStatus = 'New' | 'Cooking' | 'Delivering' | 'Delivered';

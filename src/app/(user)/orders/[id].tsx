@@ -6,6 +6,10 @@ import { View, Text, FlatList, StyleSheet } from 'react-native';
 const OrderDetailsScreen = () => {
   const { id } = useLocalSearchParams();
   const order = orders.find((o) => o.id.toString() === id);
+
+  if (!order) {
+    return <Text>Order not found</Text>;
+  }
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ title: `Order #${order.id}` }} />

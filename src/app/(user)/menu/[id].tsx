@@ -4,7 +4,7 @@ import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import products from '@assets/data/products';
 import { defaultImage } from 'utils';
 import Button from '@/components/Button';
-import { useCart } from '@/store/CartContext';
+import { useCart } from '@/store/CartProvider';
 
 const sizes: PizzaSize[] = ['S', 'M', 'L', 'XL'];
 

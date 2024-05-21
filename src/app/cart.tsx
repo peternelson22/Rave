@@ -1,6 +1,6 @@
 import Button from '@/components/Button';
 import CartListItem from '@/components/CartListItem';
-import { useCart } from '@/store/CartContext';
+import { useCart } from '@/store/CartProvider';
 import { StatusBar } from 'expo-status-bar';
 import { View, Text, Platform, FlatList } from 'react-native';
 

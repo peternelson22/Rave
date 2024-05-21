@@ -3,7 +3,7 @@ import React from 'react';
 import Colors from '../constants/Colors';
 import { FontAwesome } from '@expo/vector-icons';
 import { defaultImage } from 'utils';
-import { useCart } from '@/store/CartContext';
+import { useCart } from '@/store/CartProvider';
 
 type CartListItemProps = {
   cartItem: CartItem;
