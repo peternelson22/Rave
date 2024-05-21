@@ -6,7 +6,7 @@ import { useAuth } from '@/store/AuthProvider';
 import { supabase } from '@/lib/supabase';
 
 const index = () => {
-  const { session, loading } = useAuth();
+  const { session, loading, isAdmin } = useAuth();
 
   if (loading) {
     return <ActivityIndicator color='blue' size='small' />;
@@ -15,6 +15,10 @@ const index = () => {
   if (!session) {
     return <Redirect href={'/auth'} />;
   }
+  if (!isAdmin) {
+    return <Redirect href={'/(user)'} />;
+  }
+
   return (
     <>
       <Stack.Screen options={{ title: 'Welcome to RAVE' }} />
@@ -25,9 +29,11 @@ const index = () => {
         <Link href={'/(admin)'} asChild>
           <Button text='Admin' />
         </Link>
-        <Link href={'/(auth)/auth'} asChild>
-          <Button text='Sign In' />
-        </Link>
+        {!session && (
+          <Link href={'/(auth)/auth'} asChild>
+            <Button text='Sign In' />
+          </Link>
+        )}
         <Button text='Sign out' onPress={() => supabase.auth.signOut()} />
       </View>
     </>
