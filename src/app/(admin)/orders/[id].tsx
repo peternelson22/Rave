@@ -1,9 +1,16 @@
+import { useOrderDetails, useUpdateOrder } from '@/api/orders';
 import OrderItemListItem from '@/components/OrderItemListItem';
 import OrderListItem from '@/components/OrderListItem';
 import Colors from '@/constants/Colors';
-import orders from '@assets/data/orders';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { View, Text, FlatList, StyleSheet, Pressable } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  Pressable,
+  ActivityIndicator,
+} from 'react-native';
 
 const OrderStatusList: OrderStatus[] = [
   'New',
@@ -13,12 +20,23 @@ const OrderStatusList: OrderStatus[] = [
 ];
 
 const OrderDetailsScreen = () => {
-  const { id } = useLocalSearchParams();
-  const order = orders.find((o) => o.id.toString() === id);
+  const { id: idString } = useLocalSearchParams();
+  const { mutate: updateOrder } = useUpdateOrder();
+  //@ts-ignore
+  const id = parseFloat(typeof id === 'string' ? idString : idString[0]);
+  const { data: order, isLoading, error } = useOrderDetails(id);
 
-  if (!order) {
-    return <Text>Order not found</Text>;
+  const updateStatus = (status: string) => {
+    updateOrder({ id: id, updatedFields: { status } });
+  };
+
+  if (isLoading) {
+    return <ActivityIndicator color='blue' size='small' />;
   }
+  if (error || !order) {
+    return <Text>Failed to fetch data</Text>;
+  }
+
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ title: `Order #${order.id}` }} />
@@ -27,6 +45,7 @@ const OrderDetailsScreen = () => {
 
       <FlatList
         data={order.order_items}
+        //@ts-ignore
         renderItem={({ item }) => <OrderItemListItem item={item} />}
         contentContainerStyle={{ gap: 10 }}
         ListFooterComponent={() => (
@@ -36,7 +55,7 @@ const OrderDetailsScreen = () => {
               {OrderStatusList.map((status) => (
                 <Pressable
                   key={status}
-                  onPress={() => console.warn('Update status')}
+                  onPress={() => updateStatus(status)}
                   style={{
                     borderColor: Colors.light.tint,
                     borderWidth: 1,

@@ -3,11 +3,12 @@ import React from 'react';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
 import { Link, useSegments } from 'expo-router';
+import { Tables } from '@/types/database-types';
 
 dayjs.extend(relativeTime);
 
 type OrderListItemProps = {
-  order: Order;
+  order: Tables<'orders'>;
 };
 
 const OrderListItem = ({ order }: OrderListItemProps) => {

@@ -1,9 +1,16 @@
+import { useUserOrderList } from '@/api/orders';
 import OrderListItem from '@/components/OrderListItem';
-import orders from '@assets/data/orders';
-import { Stack } from 'expo-router';
-import { FlatList } from 'react-native';
+import { ActivityIndicator, FlatList, Text } from 'react-native';
 
 export default function OrdersScreen() {
+  const { data: orders, error, isLoading } = useUserOrderList();
+
+  if (isLoading) {
+    return <ActivityIndicator color='blue' size='small' />;
+  }
+  if (error) {
+    return <Text>Failed to fetch data</Text>;
+  }
   return (
     <>
       <FlatList

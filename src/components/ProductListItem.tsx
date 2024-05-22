@@ -3,6 +3,11 @@ import React from 'react';
 import Colors from '@/constants/Colors';
 import { Link, useSegments } from 'expo-router';
 import { defaultImage } from '@/utils';
+import { Tables } from '@/types/database-types';
+
+type ProductListProps = {
+  product: Tables<'products'>;
+};
 
 const ProductListItem = ({ product }: ProductListProps) => {
   const { name, image, price } = product;

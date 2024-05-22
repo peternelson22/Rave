@@ -4,9 +4,6 @@ type Product = {
   image: string | null;
   price: number;
 };
-type ProductListProps = {
-  product: Product;
-};
 
 type CartItem = {
   id: string;
