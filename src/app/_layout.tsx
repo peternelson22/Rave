@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { SplashScreen, Stack } from 'expo-router';
 import CartProvider from '@/store/CartProvider';
 import AuthProvider from '@/store/AuthProvider';
+import QueryProvider from '@/store/QueryProvider';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -45,17 +46,23 @@ export default function RootLayout() {
 function RootLayoutNav() {
   return (
     <AuthProvider>
-      <CartProvider>
-        <Stack>
-          <Stack.Screen name='(auth)' options={{ headerShown: false }} />
-          <Stack.Screen name='(admin)' options={{ headerShown: false }} />
-          <Stack.Screen name='(user)' options={{ headerShown: false }} />
-          <Stack.Screen
-            name='cart'
-            options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
-          />
-        </Stack>
-      </CartProvider>
+      <QueryProvider>
+        <CartProvider>
+          <Stack>
+            <Stack.Screen name='(auth)' options={{ headerShown: false }} />
+            <Stack.Screen name='(admin)' options={{ headerShown: false }} />
+            <Stack.Screen name='(user)' options={{ headerShown: false }} />
+            <Stack.Screen name='index' options={{ title: 'Welcome to RAVE' }} />
+            <Stack.Screen
+              name='cart'
+              options={{
+                presentation: 'modal',
+                animation: 'slide_from_bottom',
+              }}
+            />
+          </Stack>
+        </CartProvider>
+      </QueryProvider>
     </AuthProvider>
   );
 }

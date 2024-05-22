@@ -20,6 +20,7 @@ export default function TabLayout() {
   }
   return (
     <Tabs
+      initialRouteName=''
       screenOptions={{
         tabBarActiveTintColor: Colors.light.background,
         tabBarInactiveTintColor: 'gainsboro',

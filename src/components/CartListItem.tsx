@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 import React from 'react';
 import Colors from '../constants/Colors';
 import { FontAwesome } from '@expo/vector-icons';
-import { defaultImage } from 'utils';
+import { defaultImage } from '@/utils';
 import { useCart } from '@/store/CartProvider';
 
 type CartListItemProps = {

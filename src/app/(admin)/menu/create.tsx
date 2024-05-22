@@ -11,9 +11,10 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import { defaultImage } from 'utils';
+import { defaultImage } from '@/utils';
 import * as ImagePicker from 'expo-image-picker';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { Stack, router, useLocalSearchParams } from 'expo-router';
+import { useInsertProduct } from '@/api/products';
 
 const DismissKeyboard = ({ children }: PropsWithChildren) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -29,6 +30,8 @@ const CreateProductScreen = () => {
 
   const { id } = useLocalSearchParams();
   const isUpdating = !!id;
+
+  const { mutate: insertProduct } = useInsertProduct();
 
   const resetFields = () => {
     setName('');
@@ -64,9 +67,15 @@ const CreateProductScreen = () => {
     if (!validateInputs()) {
       return;
     }
-    console.warn('Creating...');
-
-    resetFields();
+    insertProduct(
+      { name, price: parseFloat(price), image },
+      {
+        onSuccess: () => {
+          router.back();
+          resetFields();
+        },
+      }
+    );
   };
 
   const update = () => {

@@ -18,8 +18,8 @@ export default function TabLayout() {
     return <Redirect href={'/'} />;
   }
   return (
-    <Tabs>
-      <Tabs.Screen name='index' options={{ href: null }} />
+    <Tabs initialRouteName=''>
+      <Tabs.Screen name='index' options={{ title: '', href: null }} />
       <Tabs.Screen
         name='menu'
         options={{

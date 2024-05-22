@@ -52,6 +52,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   }, []);
   return (
     <AuthContext.Provider
+      //@ts-ignore
       value={{ session, loading, profile, isAdmin: profile?.group === 'ADMIN' }}
     >
       {children}

@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Image } from 'react-native';
 import React from 'react';
-import { defaultImage } from 'utils';
+import { defaultImage } from '@/utils';
 import Colors from '@/constants/Colors';
 
 type OrderItemListItemProps = {
