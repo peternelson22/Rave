@@ -36,8 +36,8 @@ const ProductDetailsScreen = () => {
   if (isLoading) {
     return <ActivityIndicator color='blue' size='small' />;
   }
-  if (error) {
-    return <Text>Failed to fetch data</Text>;
+  if (error || !product) {
+    return <Text>Failed to fetch product</Text>;
   }
 
   return (
