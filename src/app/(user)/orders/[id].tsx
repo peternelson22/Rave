@@ -1,4 +1,5 @@
 import { useOrderDetails } from '@/api/orders';
+import { useUpdateOrderSubscription } from '@/api/orders/subscriptions';
 import OrderItemListItem from '@/components/OrderItemListItem';
 import OrderListItem from '@/components/OrderListItem';
 import { Stack, useLocalSearchParams } from 'expo-router';
@@ -16,6 +17,8 @@ const OrderDetailsScreen = () => {
   const id = parseFloat(typeof id === 'string' ? idString : idString[0]);
   const { data: order, isLoading, error } = useOrderDetails(id);
 
+  useUpdateOrderSubscription(id);
+
   if (isLoading) {
     return <ActivityIndicator color='blue' size='small' />;
   }
@@ -30,6 +33,7 @@ const OrderDetailsScreen = () => {
 
       <FlatList
         data={order.order_items}
+        //@ts-ignore
         renderItem={({ item }) => <OrderItemListItem item={item} />}
         contentContainerStyle={{ gap: 10 }}
       />
