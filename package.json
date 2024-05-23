@@ -46,7 +46,10 @@
     "react-native-screens": "3.31.1",
     "react-native-tab-view": "^3.5.2",
     "react-native-url-polyfill": "^2.0.0",
-    "react-native-web": "~0.19.10"
+    "react-native-web": "~0.19.10",
+    "expo-notifications": "~0.28.3",
+    "expo-device": "~6.0.2",
+    "expo-constants": "~16.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
