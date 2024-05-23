@@ -4,21 +4,23 @@ import Colors from '@/constants/Colors';
 import { Link, useSegments } from 'expo-router';
 import { defaultImage } from '@/utils';
 import { Tables } from '@/types/database-types';
+import RemoteImage from './RemoteImage';
 
 type ProductListProps = {
   product: Tables<'products'>;
 };
 
 const ProductListItem = ({ product }: ProductListProps) => {
-  const { name, image, price } = product;
+  const { name, price } = product;
 
   const segments = useSegments();
 
   return (
     <Link href={`/${segments[0]}/menu/${product.id}`} asChild>
       <Pressable style={styles.container}>
-        <Image
-          source={{ uri: image || defaultImage }}
+        <RemoteImage
+          path={product.image}
+          fallback={defaultImage}
           resizeMode='contain'
           style={styles.image}
         />

@@ -14,12 +14,16 @@ import {
 import { defaultImage } from '@/utils';
 import * as ImagePicker from 'expo-image-picker';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import * as FileSystem from 'expo-file-system';
+import { decode } from 'base64-arraybuffer';
 import {
   useDeleteProduct,
   useInsertProduct,
   useProduct,
   useUpdateProduct,
 } from '@/api/products';
+import { randomUUID } from 'expo-crypto';
+import { supabase } from '@/lib/supabase';
 
 const DismissKeyboard = ({ children }: PropsWithChildren) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -85,12 +89,13 @@ const CreateProductScreen = () => {
     Keyboard.dismiss();
   };
 
-  const create = () => {
+  const create = async () => {
     if (!validateInputs()) {
       return;
     }
+    const imagePath = await uploadImage();
     insertProduct(
-      { name, price: parseFloat(price), image },
+      { name, price: parseFloat(price), image: imagePath },
       {
         onSuccess: () => {
           resetFields();
@@ -100,12 +105,14 @@ const CreateProductScreen = () => {
     );
   };
 
-  const update = () => {
+  const update = async () => {
     if (!validateInputs()) {
       return;
     }
+    const imagePath = await uploadImage();
+
     updateProduct(
-      { id, name, price, image },
+      { id, name, price, image: imagePath },
       {
         onSuccess: () => {
           resetFields();
@@ -128,6 +135,25 @@ const CreateProductScreen = () => {
       { text: 'Cancel', style: 'cancel' },
       { text: 'Delete', style: 'destructive', onPress: onDelete },
     ]);
+  };
+
+  const uploadImage = async () => {
+    if (!image?.startsWith('file://')) {
+      return;
+    }
+
+    const base64 = await FileSystem.readAsStringAsync(image, {
+      encoding: 'base64',
+    });
+    const filePath = `${randomUUID()}.png`;
+    const contentType = 'image/png';
+    const { data, error } = await supabase.storage
+      .from('product-images')
+      .upload(filePath, decode(base64), { contentType });
+
+    if (data) {
+      return data.path;
+    }
   };
 
   const pickImage = async () => {
