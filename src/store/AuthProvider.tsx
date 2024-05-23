@@ -39,6 +39,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
         .select('*')
         .eq('id', session.user.id)
         .single();
+      //@ts-ignore
       setProfile(data || null);
     }
     setLoading(false);

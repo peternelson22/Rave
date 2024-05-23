@@ -2,6 +2,7 @@ import { useOrderDetails, useUpdateOrder } from '@/api/orders';
 import OrderItemListItem from '@/components/OrderItemListItem';
 import OrderListItem from '@/components/OrderListItem';
 import Colors from '@/constants/Colors';
+import { notifyUserAboutOrderUpdate } from '@/lib/notifications';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import {
   View,
@@ -26,8 +27,11 @@ const OrderDetailsScreen = () => {
   const id = parseFloat(typeof id === 'string' ? idString : idString[0]);
   const { data: order, isLoading, error } = useOrderDetails(id);
 
-  const updateStatus = (status: string) => {
+  const updateStatus = async (status: string) => {
     updateOrder({ id: id, updatedFields: { status } });
+    if (order) {
+      await notifyUserAboutOrderUpdate({ ...order, status });
+    }
   };
 
   if (isLoading) {
