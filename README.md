@@ -34,7 +34,7 @@ Follow these steps to set up and run the project on your local machine.
 1. **Clone the repository:**
 
     ```sh
-    git clone https://github.com/peternelson22/rave.git
+    git clone https://github.com/peternelson22/Rave.git
     cd rave
     ```
 
